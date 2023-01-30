@@ -2,16 +2,19 @@ library(tidyverse)
 library(RSQLite)
 library(DBI)
 library(ggplot2)
-library(forcats)
 library(dplyr)
 
+#set working directory
 setwd("~/workbook")
 
+#connect to the databade
 con <- dbConnect(RSQLite::SQLite(),"Disaster_Data.db")
 
+#list tables from the database 
 dbListTables(con)
 dbListFields(con,"us_disaster_declarations")
 
+#test out this sql query
 res<- dbSendQuery(con,
 "SELECT fy_declared, 
 count(incident_type) AS number_of_incidents 
@@ -28,39 +31,38 @@ WHERE fy_declared > 1960
 GROUP BY fy_declared
 ORDER by fy_declared DESC;")
 
-
+#build the data frames
 disaster_df <- dbReadTable(con, "us_disaster_declarations")
 query <- dbReadTable(con,res)
-
-summary(disaster_df)
-colnames(disaster_df)
-
-
 type<- disaster_df %>% 
   count(incident_type)
 
+#build summary stats from the data frames
+summary(disaster_df)
+colnames(disaster_df)
 
+#rename  columns in the res data frames
 res <- res %>% 
   rename(Number_of_Disasters_Declared = number_of_incidents,Year_Declared = fy_declared)
 
+#arrange the order in a sequence this is a test for a later ggplot
 type <- type %>% 
   arrange(n)
 
-fct_reo
-
+#take a look at the distribution of the graphs this this test for outliers
 boxplot(res$number_of_incidents)
 boxplot(type$n)
 
+#filter out outliers
 res <- res %>% 
-  filter(number_of_incidents < 4500)
+  filter(Number_of_Disasters_Declared < 4500)
 
-type <- type %>% 
-  filter(n < 5000)
-
+#double check outliers with boxplot
 boxplot(type$n)
-
 boxplot(res$number_of_incidents)
 
+#build an arrangment paired with mutaute in DPLYR library than pass it to ggplot and build the graph
+#this reorders the factors in the graph so its easier to break down and look at/
 type %>% 
   arrange(n) %>% 
   mutate(incident_type=factor(incident_type,levels=incident_type)) %>% 
@@ -68,14 +70,7 @@ type %>%
   geom_point(aes())+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-type %>% 
-  dplyr::mutate(incident_type = fct_reorder(n,incident_type, .fun ='length')) %>% 
-  ggplot(aes(x=incident_type,y=n))+
-  geom_point(aes())+
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-
-
-
+#build a standard GGPLOT since this graph is on a timelines no need to do anything to it
 ggplot(data = res,mapping = aes(x = Year_Declared,y=Number_of_Disasters_Declared))+
   geom_point(aes())+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
@@ -83,18 +78,5 @@ ggplot(data = res,mapping = aes(x = Year_Declared,y=Number_of_Disasters_Declared
          "By the federal government")
 
 
-
-
-fct_reo
-
-
-type %>% 
-  mutate(incident_type = fct_reorder(incident_type,n))
-
-
-
-
+#disconnect from the database
 dbDisconnect(con)
-
-
-
