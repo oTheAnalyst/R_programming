@@ -71,7 +71,7 @@ friends %>%
 friends %>% 
   distinct()
 
-#recoding variables withing fac
+#recoding variables with the mutate function
 starwars %>% 
   select(name,gender) %>%
   mutate(gender = recode(gender,
