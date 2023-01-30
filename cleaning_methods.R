@@ -1,18 +1,20 @@
-
+#load libraries
 library(tidyverse)
 library(dplyr)
 library(janitor)
 
+#view the data throught summary type functions 
 data()
 View(starwars)
-
 glimpse(starwars)
 str(starwars)
-
 head(starwars)
+
+
 class(starwars$gender)
 unique(starwars$gender)
 
+#convert the charecter type to a vector
 starwars$gender <- as.factor(starwars$gender)
 class(starwars$gender)
 
@@ -25,7 +27,6 @@ starwars$gender <- factor((starwars$gender),
 levels(starwars$gender)
 
 #select variables
-
 names(starwars)
 
 starwars %>% 
@@ -34,6 +35,7 @@ starwars %>%
 
 unique(starwars$hair_color)
 
+#select columns, filters by blonde and brown hair color and height under 180 
 # %in% = means or/either12
 starwars_df %>% 
   select(name, height, ends_with("color")) %>% 
@@ -42,11 +44,13 @@ starwars_df %>%
 
 mean(starwars$height, na.rm = TRUE)
 
+#Find the incomplete cases in the dataframe
 starwars %>% 
   select(name, gender, hair_color,height) %>% 
   filter(!complete.cases(.)) %>% 
   drop_na(height)
 
+#Replaces the NA with the string none
 starwars %>% 
   select(name, gender, hair_color,height) %>% 
   filter(!complete.cases(.)) %>% 
@@ -59,13 +63,15 @@ friends <- data.frame(Names, Age)
 head(friends)
 View(friends)
 
+#find duplicates
 friends %>% 
   get_dupes()
 
+#filters out duplicates 
 friends %>% 
   distinct()
 
-#recoding variables 
+#recoding variables withing fac
 starwars %>% 
   select(name,gender) %>%
   mutate(gender = recode(gender,
