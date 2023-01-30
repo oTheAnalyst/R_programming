@@ -14,7 +14,7 @@ con <- dbConnect(RSQLite::SQLite(),"Disaster_Data.db")
 dbListTables(con)
 dbListFields(con,"us_disaster_declarations")
 
-#test out this sql query
+#test out this sql query/build a data frame with the query
 res<- dbSendQuery(con,
 "SELECT fy_declared, 
 count(incident_type) AS number_of_incidents 
