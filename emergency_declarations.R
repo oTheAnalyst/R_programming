@@ -14,7 +14,7 @@ con <- dbConnect(RSQLite::SQLite(),"Disaster_Data.db")
 dbListTables(con)
 dbListFields(con,"us_disaster_declarations")
 
-#test out this sql query/build a data frame with the query
+#test out this sql query
 res<- dbSendQuery(con,
 "SELECT fy_declared, 
 count(incident_type) AS number_of_incidents 
@@ -50,7 +50,7 @@ type <- type %>%
   arrange(n)
 
 #take a look at the distribution of the graphs this this test for outliers
-boxplot(res$number_of_incidents)
+boxplot(res$Number_of_Disasters_Declared)
 boxplot(type$n)
 
 #filter out outliers
@@ -59,7 +59,7 @@ res <- res %>%
 
 #double check outliers with boxplot
 boxplot(type$n)
-boxplot(res$number_of_incidents)
+boxplot(res$Number_of_Disasters_Declared)
 
 #build an arrangment paired with mutaute in DPLYR library than pass it to ggplot and build the graph
 #this reorders the factors in the graph so its easier to break down and look at/
