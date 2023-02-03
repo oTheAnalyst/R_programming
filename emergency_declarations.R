@@ -40,6 +40,8 @@ type<- disaster_df %>%
 #build summary stats from the data frames
 summary(disaster_df)
 colnames(disaster_df)
+head(disaster_df)
+View(disaster_df)
 
 #rename  columns in the res data frames
 res <- res %>% 
@@ -55,11 +57,13 @@ boxplot(type$n)
 
 #filter out outliers
 res <- res %>% 
-  filter(Number_of_Disasters_Declared < 4500)
+  filter(Number_of_Disasters_Declared < 4500,Year_Declared < 2023)
 
 #double check outliers with boxplot
 boxplot(type$n)
 boxplot(res$Number_of_Disasters_Declared)
+
+View(res)
 
 #build an arrangment paired with mutaute in DPLYR library than pass it to ggplot and build the graph
 #this reorders the factors in the graph so its easier to break down and look at/
