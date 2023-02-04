@@ -1,5 +1,3 @@
-install.packages("broom222")
-install.packages("ggpubr")
 
 library(tidyverse)
 library(RSQLite)
@@ -7,8 +5,8 @@ library(DBI)
 library(ggplot2)
 library(dplyr)
 
-library(ggpubr)
-library(broom222)
+##library(ggpubr)
+##library(broom222)
 
 #set working directory
 setwd("~/workbook")
@@ -81,8 +79,6 @@ type %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 
-
-
 hist(res$Number_of_Disasters_Declared)
 
 
@@ -95,10 +91,10 @@ res.graph <-ggplot(data = res,mapping = aes(x = Year_Declared,y=Number_of_Disast
 
 res.graph <- res.graph +geom_smooth(method = "lm",col="black")
 
-res.graph <- res.graph+
-  stat_regline_
 
 cor(res$Year_Declared,res$Number_of_Disasters_Declared)
+
+
 
 #disconnect from the database
 dbDisconnect(con)
